@@ -1,9 +1,4 @@
-image: ubuntu
-
 build: off
 
-install:
-  - python --version
-
 test_script:
-  - echo "Hello from AppVeyor!"
+  - echo AppVeyor is working!
