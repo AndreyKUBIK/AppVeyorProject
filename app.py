@@ -33,3 +33,5 @@ def submit():
 
 if __name__ == "__main__":
     app.run()
+print("SITE KEY:", bool(RECAPTCHA_SITE_KEY))
+print("SECRET KEY:", bool(RECAPTCHA_SECRET_KEY))
