@@ -1,4 +1,7 @@
-build: off
+image: Ubuntu
+
+install:
+  - pip install -r requirements.txt
 
 test_script:
-  - echo AppVeyor is working!
+  - python -m py_compile app.py
