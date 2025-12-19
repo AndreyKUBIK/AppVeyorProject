@@ -12,6 +12,8 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 RECAPTCHA_SITE_KEY = os.environ.get("RECAPTCHA_SITE_KEY",)
 RECAPTCHA_SECRET_KEY = os.environ.get("RECAPTCHA_SECRET_KEY",)
+print(bool(os.environ.get("RECAPTCHA_SITE_KEY")))
+print(bool(os.environ.get("RECAPTCHA_SECRET_KEY")))
 
 @app.route('/', methods=['GET', 'POST'])
 def CAPTCHA():
