@@ -14,7 +14,7 @@ RECAPTCHA_SITE_KEY = os.environ.get("RECAPTCHA_SITE_KEY",)
 RECAPTCHA_SECRET_KEY = os.environ.get("RECAPTCHA_SECRET_KEY",)
 
 @app.route('/', methods=['GET', 'POST'])
-def captcha():
+def CAPTCHA():
 
     if request.method == 'POST':
         recaptcha_response = request.form.get("g-recaptcha-response")
@@ -36,17 +36,17 @@ def captcha():
         
         return "Капча не пройдена", 400
     
-    return render_template('captcha.html', site_key=RECAPTCHA_SITE_KEY)
+    return render_template('CAPTCHA.html', site_key=RECAPTCHA_SITE_KEY)
 
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
 
     if not session.get("captcha_passed"):
-        return redirect(url_for('captcha'))
+        return redirect(url_for('CAPTCHA'))
     
     if request.method == 'POST':
 
-        if 'file' not in request.files:
+        if 'image' not in request.files:
             return "Нет файла", 400
         
         image = request.files['image']
