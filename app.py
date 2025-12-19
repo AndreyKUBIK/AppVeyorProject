@@ -6,7 +6,8 @@ app = Flask(__name__)
 
 RECAPTCHA_SITE_KEY = os.environ.get("RECAPTCHA_SITE_KEY")
 RECAPTCHA_SECRET_KEY = os.environ.get("RECAPTCHA_SECRET_KEY")
-
+print("SITE KEY:", bool(RECAPTCHA_SITE_KEY))
+print("SECRET KEY:", bool(RECAPTCHA_SECRET_KEY))
 @app.route("/")
 def index():
     return render_template("index.html", site_key=RECAPTCHA_SITE_KEY)
@@ -33,5 +34,3 @@ def submit():
 
 if __name__ == "__main__":
     app.run()
-print("SITE KEY:", bool(RECAPTCHA_SITE_KEY))
-print("SECRET KEY:", bool(RECAPTCHA_SECRET_KEY))
