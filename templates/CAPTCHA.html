@@ -1,16 +1,27 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
+
     <meta charset="UTF-8">
     <title>Проверка пользователя</title>
+
 </head>
+
 <body>
+
     <h2>Подтвердите, что вы не робот</h2>
+
     <form method="POST">
-        <div class="g-recaptcha" data-sitekey="YOUR_SITE_KEY"></div>
+
+        <div class="g-recaptcha" data-sitekey="{{ site_key }}"></div>
         <br><br>
-        <button type="submit">Продолжить</button>    
+        <button type="submit">Продолжить</button>
+
     </form>
+    
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
+
 </body>
+
 </html> 
