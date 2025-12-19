@@ -6,6 +6,7 @@ app = Flask(__name__)
 
 RECAPTCHA_SITE_KEY = os.environ.get("RECAPTCHA_SITE_KEY")
 RECAPTCHA_SECRET_KEY = os.environ.get("RECAPTCHA_SECRET_KEY")
+
 print("SITE KEY:", bool(RECAPTCHA_SITE_KEY))
 print("SECRET KEY:", bool(RECAPTCHA_SECRET_KEY))
 @app.route("/")
