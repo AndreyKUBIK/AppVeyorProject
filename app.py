@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, session
+from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
 import os
 import requests
 
@@ -46,6 +46,8 @@ def upload():
     if not session.get("captcha_passed"):
         return redirect(url_for('CAPTCHA'))
     
+    image_filename = None
+    
     if request.method == 'POST':
 
         if 'image' not in request.files:
@@ -56,11 +58,14 @@ def upload():
         if image.filename == '':
             return "Нет выбранного файла", 400
         
+        image_filename = image.filename
         file_path = os.path.join(UPLOAD_FOLDER, image.filename)
         image.save(file_path)
-        return f"Файл {image.filename} успешно загружен"
-    return render_template('upload.html')
-
+        
+    return render_template(
+        'upload.html',
+        image_filename=image_filename
+    )
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)

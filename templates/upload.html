@@ -21,6 +21,11 @@
            
     </form>
 
+{% if image_filename %}
+    <h3>Загруженное изображение:</h3>
+    <img src="{{ url_for('static', filename='uploads/' + image_filename) }}" alt="Uploaded Image" style="max-width:500px;">
+{% endif %}
+
 </body>
 
 </html>
