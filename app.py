@@ -12,8 +12,6 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
 RECAPTCHA_SITE_KEY = os.environ.get("RECAPTCHA_SITE_KEY",)
 RECAPTCHA_SECRET_KEY = os.environ.get("RECAPTCHA_SECRET_KEY",)
-print(bool(os.environ.get("RECAPTCHA_SITE_KEY")))
-print(bool(os.environ.get("RECAPTCHA_SECRET_KEY")))
 
 @app.route('/', methods=['GET', 'POST'])
 def CAPTCHA():
@@ -66,6 +64,10 @@ def upload():
         'upload.html',
         image_filename=image_filename
     )
+
+@app.route('/uploads/<filename>')
+def uploaded_file(filename):
+    return send_from_directory(UPLOAD_FOLDER, filename)
 
 if __name__ == '__main__':
     app.run(host="0.0.0.0", port=5000, debug=True)
