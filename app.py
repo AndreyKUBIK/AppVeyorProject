@@ -1,7 +1,9 @@
 from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
 import os
 import requests
-
+from PIL import Image
+import numpy as np
+import math
 
 
 app = Flask(__name__)
@@ -13,6 +15,22 @@ os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 RECAPTCHA_SITE_KEY = os.environ.get("RECAPTCHA_SITE_KEY",)
 RECAPTCHA_SECRET_KEY = os.environ.get("RECAPTCHA_SECRET_KEY",)
 
+def process_image(input_path, output_path, func, period):
+    img = Image.open(input_path).convert("RGB")
+    arr = np.array(img).astype(np.float32)
+
+    height, width, _ = arr.shape
+
+    for x in range(width):
+        if func == "sin":
+            factor = (1 + math.sin(2 * math.pi * x / period)) / 2
+        else:
+            factor = (1 + math.cos(2 * math.pi * x / period)) / 2
+
+        arr[:, x, :] *= factor
+
+    arr = np.clip(arr, 0, 255).astype(np.uint8)
+    Image.fromarray(arr).save(output_path)
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -70,21 +88,28 @@ def upload():
             function = request.form.get("function")
             period = request.form.get("period")
 
-            print("Выбрана функция:", function)
-            print("Период:", period)
-
-            # позже здесь будет обработка
-
             image_filename = session.get("image_filename")
+            input_path = os.path.join(UPLOAD_FOLDER, image_filename)
 
-    else:
-        image_filename = session.get("image_filename")
+            processed_filename = f"processed_{image_filename}"
+            output_path = os.path.join(UPLOAD_FOLDER, processed_filename)
+
+            process_image(
+                input_path=input_path,
+                output_path=output_path,
+                func=function,
+                period=period
+            )
+
+            session["processed_image"] = processed_filename
+
+    processed_image = session.get("processed_image")
 
     return render_template(
         'upload.html',
-        image_filename=image_filename
+        image_filename=image_filename,
+        processed_image=processed_image
     )
-
 
 
 
