@@ -4,6 +4,9 @@ import requests
 from PIL import Image
 import numpy as np
 import math
+import matplotlib
+matplotlib.use("Agg")  
+import matplotlib.pyplot as plt
 
 
 app = Flask(__name__)
@@ -31,6 +34,36 @@ def process_image(input_path, output_path, func, period):
 
     arr = np.clip(arr, 0, 255).astype(np.uint8)
     Image.fromarray(arr).save(output_path)
+
+
+
+def histogram(image_path, output_path, title):
+    img = Image.open(image_path).convert("RGB")
+    arr = np.array(img)
+
+    plt.figure(figsize=(6, 4))
+
+    colors = ['red', 'green', 'blue']
+    for i, color in enumerate(colors):
+        channel = arr[:, :, i].flatten()
+        plt.hist(
+            channel,
+            bins=256,
+            range=(0, 255),
+            color=color,
+            alpha=0.5,
+            label=color.upper()
+        )
+
+    plt.title(title)
+    plt.xlabel("Яркость")
+    plt.ylabel("Количество пикселей")
+    plt.legend()
+    plt.tight_layout()
+
+    plt.savefig(output_path)
+    plt.close()
+
 
 
 @app.route('/', methods=['GET', 'POST'])
@@ -101,14 +134,33 @@ def upload():
                 period=period
             )
 
-            session["processed_image"] = processed_filename
+            original_hist = f"hist_original_{image_filename}.png"
+            processed_hist = f"hist_processed_{image_filename}.png"
+
+            histogram(
+                image_path=input_path,
+                output_path=os.path.join(UPLOAD_FOLDER, original_hist),
+                title="Гистограмма оригинального изображения"
+            )
+
+            histogram(
+                image_path=output_path,
+                output_path=os.path.join(UPLOAD_FOLDER, processed_hist),
+                title="Гистограмма обработанного изображения"
+            )
+
+        session["original_hist"] = original_hist
+        session["processed_hist"] = processed_hist
+        session["processed_image"] = processed_filename
 
     processed_image = session.get("processed_image")
 
     return render_template(
         'upload.html',
         image_filename=image_filename,
-        processed_image=processed_image
+        processed_image=processed_image,
+        original_hist=session.get("original_hist"),
+        processed_hist=session.get("processed_hist")
     )
 
 

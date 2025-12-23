@@ -10,7 +10,6 @@
 </head>
 
 <body>
-
     <h2>Загрузите ваше изображение</h2>
 
     <form method="POST" enctype="multipart/form-data">
@@ -69,6 +68,24 @@
 
     <hr>
     
+{% endif %}
+
+{% if original_hist and processed_hist %}
+<h3>Гистограммы распределения цветов</h3>
+
+<div style="display:flex; gap:30px;">
+
+    <div>
+        <p>Оригинальное изображение</p>
+        <img src="/uploads/{{ original_hist }}" style="max-width:400px;">
+    </div>
+
+    <div>
+        <p>Обработанное изображение</p>
+        <img src="/uploads/{{ processed_hist }}" style="max-width:400px;">
+    </div>
+
+</div>
 {% endif %}
 
 </body>
