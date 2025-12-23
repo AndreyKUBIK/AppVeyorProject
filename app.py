@@ -100,7 +100,7 @@ def upload():
         return redirect(url_for('CAPTCHA'))
 
     image_filename = None
-    rocessed_image = None
+    processed_image = None
     original_hist = None
     processed_hist = None
 
