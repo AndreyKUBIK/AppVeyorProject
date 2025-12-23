@@ -31,18 +31,7 @@
             <img src="/uploads/{{ image_filename }}" style="max-width:500px;">
         </div>
 
-        {% if processed_image %}
-        <div>
-            <p>Обработанное</p>
-            <img src="/uploads/{{ processed_image }}" style="max-width:500px;">
-        </div>
-        {% endif %}
-
-    </div>
-
-    <hr>
-
-    <h3>Параметры обработки</h3>
+<h3>Параметры обработки</h3>
 
     <form method="POST">
 
@@ -68,6 +57,17 @@
         <button type="submit">Применить</button>
 
     </form>
+
+        {% if processed_image %}
+        <div>
+            <p>Обработанное</p>
+            <img src="/uploads/{{ processed_image }}" style="max-width:500px;">
+        </div>
+        {% endif %}
+
+    </div>
+
+    <hr>
     
 {% endif %}
 

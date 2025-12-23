@@ -86,7 +86,7 @@ def upload():
         elif 'function' in request.form:
 
             function = request.form.get("function")
-            period = request.form.get("period")
+            period = int(request.form.get("period"))
 
             image_filename = session.get("image_filename")
             input_path = os.path.join(UPLOAD_FOLDER, image_filename)
