@@ -39,6 +39,36 @@
         {% endif %}
 
     </div>
+
+    <hr>
+
+    <h3>Параметры обработки</h3>
+
+    <form method="POST">
+
+        <label>
+            <input type="radio" name="function" value="sin" checked>
+            sin
+        </label>
+
+        <label>
+            <input type="radio" name="function" value="cos">
+            cos
+        </label>
+
+        <br><br>
+
+        <label>
+            Период:
+            <input type="number" name="period" value="50" min="1" step="1" required>
+        </label>
+
+        <br><br>
+
+        <button type="submit">Применить</button>
+
+    </form>
+    
 {% endif %}
 
 </body>
