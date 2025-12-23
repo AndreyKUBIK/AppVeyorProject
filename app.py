@@ -101,6 +101,7 @@ def upload():
 
     image_filename = None
     processed_image = None
+    processed_filename = None
     original_hist = None
     processed_hist = None
 
