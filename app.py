@@ -1,3 +1,4 @@
+#Импорт необходимых библиотек
 from flask import Flask, render_template, request, redirect, url_for, session, send_from_directory
 import os
 import requests
@@ -9,15 +10,20 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 
+
+#Настройка приложения Flask
 app = Flask(__name__)
 app.secret_key = os.environ.get("FLASK_SECRET_KEY", "default_secret")
 
+#Папка для загрузки файлов
 UPLOAD_FOLDER = 'uploads'
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 
+#Настройки reCAPTCHA, ключи из переменных окружения
 RECAPTCHA_SITE_KEY = os.environ.get("RECAPTCHA_SITE_KEY",)
 RECAPTCHA_SECRET_KEY = os.environ.get("RECAPTCHA_SECRET_KEY",)
 
+#Функция для обработки изображения
 def process_image(input_path, output_path, func, period):
     img = Image.open(input_path).convert("RGB")
     arr = np.array(img).astype(np.float32)
@@ -37,6 +43,7 @@ def process_image(input_path, output_path, func, period):
 
 
 
+#Функция для построения гистограммы
 def histogram(image_path, output_path, title):
     img = Image.open(image_path).convert("RGB")
     arr = np.array(img)
@@ -66,6 +73,7 @@ def histogram(image_path, output_path, title):
 
 
 
+#Маршрут для CAPTCHA
 @app.route('/', methods=['GET', 'POST'])
 def CAPTCHA():
 
@@ -93,6 +101,7 @@ def CAPTCHA():
 
 
 
+#Маршрут для загрузки и обработки изображений
 @app.route('/upload', methods=['GET', 'POST'])
 def upload():
 
@@ -169,11 +178,11 @@ def upload():
 
 
 
+#Маршрут для отображения загруженных файлов
 @app.route('/uploads/<filename>')
 def uploaded_file(filename):
     return send_from_directory(UPLOAD_FOLDER, filename)
 
-
-
+#Запуск приложения
 if __name__ == '__main__':
     app.run()   
