@@ -8,7 +8,7 @@ import math
 import matplotlib
 matplotlib.use("Agg")  
 import matplotlib.pyplot as plt
-
+from PIL import ImageDraw, ImageFont
 
 
 #Настройка приложения Flask
@@ -24,12 +24,13 @@ RECAPTCHA_SITE_KEY = os.environ.get("RECAPTCHA_SITE_KEY",)
 RECAPTCHA_SECRET_KEY = os.environ.get("RECAPTCHA_SECRET_KEY",)
 
 #Функция для обработки изображения
-def process_image(input_path, output_path, func, period):
+def process_image(input_path, output_path, func, period, watermark_text=None):
     img = Image.open(input_path).convert("RGB")
     arr = np.array(img).astype(np.float32)
 
     height, width, _ = arr.shape
 
+    # sin / cos обработка
     for x in range(width):
         if func == "sin":
             factor = (1 + math.sin(2 * math.pi * x / period)) / 2
@@ -39,9 +40,30 @@ def process_image(input_path, output_path, func, period):
         arr[:, x, :] *= factor
 
     arr = np.clip(arr, 0, 255).astype(np.uint8)
-    Image.fromarray(arr).save(output_path)
+    img = Image.fromarray(arr)
+        
+    if watermark_text and watermark_text.strip() != "":
+        draw = ImageDraw.Draw(img)
 
+        try:
+            font_size = max(80, width // 10)
+            font = ImageFont.truetype("arial.ttf", font_size)
+        except:
+            font = ImageFont.load_default()
 
+        bbox = draw.textbbox((0, 0), watermark_text, font=font)
+        text_width = bbox[2] - bbox[0]
+        text_height = bbox[3] - bbox[1]
+
+        x = width - text_width - 20
+        y = height - text_height - 20
+
+        draw.text(
+            (x, y),
+            watermark_text,
+            fill=(255, 255, 255)
+        )
+    img.save(output_path)
 
 #Функция для построения гистограммы
 def histogram(image_path, output_path, title):
@@ -140,11 +162,16 @@ def upload():
             processed_filename = f"processed_{image_filename}"
             output_path = os.path.join(UPLOAD_FOLDER, processed_filename)
 
+            watermark_enabled = request.form.get("watermark_enabled")
+            watermark_text = request.form.get("watermark") if watermark_enabled else None
+
+
             process_image(
                 input_path=input_path,
                 output_path=output_path,
                 func=function,
-                period=period
+                period=period,
+                watermark_text=watermark_text
             )
 
             original_hist = f"hist_original_{image_filename}.png"
@@ -185,4 +212,4 @@ def uploaded_file(filename):
 
 #Запуск приложения
 if __name__ == '__main__':
-    app.run()   
+    app.run(debug=True)   
